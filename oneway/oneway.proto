@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package oneway;
+
+// The OneWay service definition
+service OneWay {
+    // SendMessage allows sending a message from the client to the server
+    rpc SendMessage(HelloRequest) returns (HelloResponse) {}
+}
+
+// The request to represent hello
+message HelloRequest {
+    string msg = 1;
+}
+
+// The response to represent hello
+message HelloResponse {
+    int32 code = 1;
+}
