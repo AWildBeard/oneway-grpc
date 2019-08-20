@@ -1,7 +1,10 @@
 *
 
 !**/*.go
+!**/*.h
+!**/*.cc
 !**/*.proto
 !**/*.md
 !*/
 !.gitignore
+!Makefile

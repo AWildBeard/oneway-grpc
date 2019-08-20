@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/AWildBeard/oneway-grpc/oneway"
+	pb "github.com/AWildBeard/oneway-grpc/golang/oneway"
 	"google.golang.org/grpc"
 )
 
