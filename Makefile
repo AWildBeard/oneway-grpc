@@ -7,8 +7,10 @@ GO_SERVER_OUT := golang/server/go_server
 PROTOC = protoc
 
 CXX = g++
-CPP_SERVER_SOURCES := cpp/server/server.cc
+CPP_SERVER_SOURCES := cpp/server/server.cpp
+CPP_CLIENT_SOURCES := cpp/client/client.cpp
 CPP_SERVER_OUT := cpp/server/cpp_server
+CPP_CLIENT_OUT := cpp/client/cpp_client
 CPPFLAGS += `pkg-config --cflags protobuf grpc`
 LDFLAGS += -L/usr/lib `pkg-config --libs protobuf grpc++`\
 			-pthread \
@@ -24,11 +26,12 @@ GOLANG_PROTO_OUT = golang/oneway/
 
 vpath %.proto $(PROTO_PATH)
 
-all: go_server go_client cpp_server
+all: go_server go_client cpp_server cpp_client
 	@echo ""
 	@echo "The golang server is @ $(GO_SERVER_OUT)"
 	@echo "The golang client is @ $(GO_CLIENT_OUT)"
 	@echo "The  cpp   server is @ $(CPP_SERVER_OUT)"
+	@echo "The  cpp   client is @ $(CPP_CLIENT_OUT)"
 
 go_server: oneway.pb.go
 	@echo ""
@@ -46,6 +49,13 @@ cpp_server: oneway.pb.cc oneway.grpc.pb.cc
 	$(CXX) \
 	$(CPP_PROTO_OUT)$(word 1, $^) $(CPP_PROTO_OUT)$(word 2, $^) $(CPP_SERVER_SOURCES) \
 	$(LDFLAGS) -o $(CPP_SERVER_OUT)
+
+cpp_client: oneway.pb.cc oneway.grpc.pb.cc
+	@echo ""
+	@echo "Compiling cpp client target"
+	$(CXX) \
+		$(CPP_PROTO_OUT)$(word 1, $^) $(CPP_PROTO_OUT)$(word 2, $^) $(CPP_CLIENT_SOURCES) \
+		$(LDFLAGS) -o $(CPP_CLIENT_OUT)
 
 %.grpc.pb.cc: %.proto
 	@$(PROTOC) -I $(PROTO_PATH) --grpc_out=$(CPP_PROTO_OUT) --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
